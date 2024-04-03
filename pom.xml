@@ -24,9 +24,9 @@
         <!-- Fast Json -->
         <fastjson.version>2.0.45</fastjson.version>
         <!-- MyBatis Plus -->
-        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!-- Mybatis -->
-        <mybatis.version>2.0.6</mybatis.version>
+        <mybatis.version>3.0.3</mybatis.version>
         <!-- MySQL -->
         <mysql.version>5.1.47</mysql.version>
     </properties>
