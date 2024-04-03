@@ -42,8 +42,13 @@
         </javaClientGenerator>
 
 
+<!--        &lt;!&ndash;生成对应表及类名&ndash;&gt;-->
+<!--        <table tableName="auth_client_details" domainObjectName="AuthClientDetails">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
+<!--        </table>-->
+
         <!--生成对应表及类名-->
-        <table tableName="auth_client_details" domainObjectName="AuthClientDetails">
+        <table tableName="user" domainObjectName="User">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

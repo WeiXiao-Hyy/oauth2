@@ -1,4 +1,4 @@
-package com.alipay.auth.service.auth.req;
+package com.alipay.auth.service.req;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.Data;

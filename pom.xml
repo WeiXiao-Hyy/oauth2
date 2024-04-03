@@ -29,6 +29,8 @@
         <mybatis.version>3.0.3</mybatis.version>
         <!-- MySQL -->
         <mysql.version>5.1.47</mysql.version>
+        <!-- Jedis -->
+        <jedis.version>2.9.0</jedis.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,6 +41,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
         <!-- Commons -->
@@ -100,6 +108,13 @@
             <version>${mysql.version}</version>
         </dependency>
 
+        <!-- Jedis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -144,7 +159,7 @@
                     <overwrite>true</overwrite>
                     <!-- 自动生成的配置 -->
                     <configurationFile>
-                        src/main/resources/generatorConfig.xml
+                        src/main/resources/mybatis-generator/generatorConfig.xml
                     </configurationFile>
                 </configuration>
             </plugin>

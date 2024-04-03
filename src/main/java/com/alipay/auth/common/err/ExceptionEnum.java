@@ -3,9 +3,8 @@ package com.alipay.auth.common.err;
 /**
  * File Description.
  *
- * @author arron
+ * @author hyy
  * @date crated at 2024/2/14 12:25
- * @see com.alipay.cloudcommon.err
  */
 public enum ExceptionEnum implements BaseErrorInfoInterface {
     // 数据操作错误定义
