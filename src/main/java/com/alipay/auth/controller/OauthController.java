@@ -2,6 +2,7 @@ package com.alipay.auth.controller;
 
 import com.alipay.auth.common.res.ResultResponse;
 import com.alipay.auth.service.auth.AuthorizationService;
+import com.alipay.auth.service.auth.req.AuthClientRegisterReq;
 import jakarta.annotation.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/oauth2.0")
 public class OauthController {
+
     @Resource(name = "authorizationServiceImpl")
     private AuthorizationService authorizationService;
 
-
     @PostMapping(value = "/clientRegister", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResultResponse<Boolean> clientRegister(@RequestBody(required = true) String details) {
-        boolean res = authorizationService.register(details);
+    public ResultResponse<Boolean> clientRegister(@RequestBody AuthClientRegisterReq req) {
+        boolean res = authorizationService.register(req);
 
         return ResultResponse.success(res);
     }

@@ -9,7 +9,6 @@ import com.alipay.auth.service.auth.req.AuthClientRegisterReq;
  */
 public interface AuthorizationService {
 
-
     /**
      * 注册需要接入的客户端信息
      *

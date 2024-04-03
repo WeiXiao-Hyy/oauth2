@@ -13,12 +13,12 @@ import lombok.Data;
 public class AuthClientRegisterReq {
     private String name;
 
-    private String callbackUrl;
+    private String redirectUri;
 
     private String description;
 
     public boolean checkParam() {
-        return StringUtils.isNotBlank(this.callbackUrl)
+        return StringUtils.isNotBlank(this.redirectUri)
                 && StringUtils.isNotBlank(this.name);
     }
 }
