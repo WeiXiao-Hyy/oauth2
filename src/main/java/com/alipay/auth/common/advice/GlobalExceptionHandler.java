@@ -3,7 +3,7 @@ package com.alipay.auth.common.advice;
 import com.alipay.auth.common.err.BizException;
 import com.alipay.auth.common.err.ExceptionEnum;
 import com.alipay.auth.common.res.ResultResponse;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
