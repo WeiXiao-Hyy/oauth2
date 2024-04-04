@@ -4,7 +4,10 @@ import com.alipay.auth.common.res.ResultResponse;
 import com.alipay.auth.service.AuthorizationService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
+import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,5 +37,11 @@ public class OauthController {
     public ResultResponse<String> authorize(@RequestBody AuthClientAuthorizeReq request) {
         String uri = authorizationService.authorize(request);
         return ResultResponse.success(uri);
+    }
+
+    @RequestMapping(value = "/token", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResultResponse<AuthClientTokenResp> token(@RequestBody AuthClientTokenReq req) {
+        AuthClientTokenResp res = authorizationService.token(req);
+        return ResultResponse.success(res);
     }
 }
