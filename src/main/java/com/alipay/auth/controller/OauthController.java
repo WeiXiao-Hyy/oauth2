@@ -1,26 +1,24 @@
 package com.alipay.auth.controller;
 
-import com.alipay.auth.common.res.ResultResponse;
+import com.alipay.auth.common.anno.ResponseResult;
 import com.alipay.auth.service.AuthorizationService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
 import com.alipay.auth.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author hyy
  * @Description
  * @create 2024-04-01 10:52
  */
-
-@Controller
+@RestController
 @RequestMapping("/oauth2.0")
 public class OauthController {
 
@@ -28,20 +26,20 @@ public class OauthController {
     private AuthorizationService authorizationService;
 
     @PostMapping(value = "/clientRegister", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResultResponse<Boolean> clientRegister(@RequestBody AuthClientRegisterReq req) {
-        boolean res = authorizationService.register(req);
-        return ResultResponse.success(res);
+    @ResponseResult
+    public boolean clientRegister(@RequestBody AuthClientRegisterReq req) {
+        return authorizationService.register(req);
     }
 
     @RequestMapping("/authorize")
-    public ResultResponse<String> authorize(@RequestBody AuthClientAuthorizeReq request) {
-        String uri = authorizationService.authorize(request);
-        return ResultResponse.success(uri);
+    @ResponseResult
+    public String authorize(@RequestBody AuthClientAuthorizeReq request) {
+        return authorizationService.authorize(request);
     }
 
     @RequestMapping(value = "/token", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResultResponse<AuthClientTokenResp> token(@RequestBody AuthClientTokenReq req) {
-        AuthClientTokenResp res = authorizationService.token(req);
-        return ResultResponse.success(res);
+    @ResponseResult
+    public AuthClientTokenResp token(@RequestBody AuthClientTokenReq req) {
+        return authorizationService.token(req);
     }
 }

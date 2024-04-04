@@ -52,10 +52,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public boolean register(AuthClientRegisterReq request) {
+
         //客户端的名称为回调地址不能为空
         if (!request.checkParam()) {
-            return false;
+            throw new BizException(ErrorCodeEnum.INVALID_REQUEST.getError());
         }
+
         //生成24位随机的clientId
         //TODO: 保证唯一性
         String clientId = EncryptUtils.getRandomStr1(20);
