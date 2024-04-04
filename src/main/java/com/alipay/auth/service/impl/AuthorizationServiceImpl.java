@@ -305,6 +305,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //3. 保存Refresh Token
         AuthRefreshToken savedRefreshToken = authRefreshTokenMapper.selectByTokenId(accessToken.getId());
+
         //如果存在tokenId匹配的记录，则更新原记录，否则向数据库中插入新记录
         if (savedRefreshToken != null) {
             savedRefreshToken.setRefreshToken(refreshTokenStr);
