@@ -2,8 +2,10 @@ package com.alipay.auth.service;
 
 
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
+import com.alipay.auth.service.req.AuthClientRefreshTokenReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientRefreshTokenResp;
 import com.alipay.auth.service.res.AuthClientTokenResp;
 
 /**
@@ -36,4 +38,12 @@ public interface AuthorizationService {
      * @return token
      */
     AuthClientTokenResp token(AuthClientTokenReq request);
+
+    /**
+     * 刷新access_token
+     *
+     * @param request {@link AuthClientRefreshTokenReq}
+     * @return {@link AuthClientRefreshTokenResp}
+     */
+    AuthClientRefreshTokenResp refreshToken(AuthClientRefreshTokenReq request);
 }

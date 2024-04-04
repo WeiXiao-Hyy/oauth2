@@ -326,4 +326,12 @@
         from auth_refresh_token
         where token_id = #{tokenId,jdbcType=INTEGER}
     </select>
+
+    <select id="selectByRefreshToken" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sso_refresh_token
+        where refresh_token = #{refreshToken,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

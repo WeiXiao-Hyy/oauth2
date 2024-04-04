@@ -3,8 +3,10 @@ package com.alipay.auth.controller;
 import com.alipay.auth.common.anno.ResponseResult;
 import com.alipay.auth.service.AuthorizationService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
+import com.alipay.auth.service.req.AuthClientRefreshTokenReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientRefreshTokenResp;
 import com.alipay.auth.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
 import org.springframework.http.MediaType;
@@ -41,5 +43,11 @@ public class OauthController {
     @ResponseResult
     public AuthClientTokenResp token(@RequestBody AuthClientTokenReq req) {
         return authorizationService.token(req);
+    }
+
+    @RequestMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseResult
+    public AuthClientRefreshTokenResp refresh(@RequestBody AuthClientRefreshTokenReq req) {
+        return authorizationService.refreshToken(req);
     }
 }

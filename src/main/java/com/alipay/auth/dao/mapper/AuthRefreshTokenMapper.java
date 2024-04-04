@@ -95,4 +95,6 @@ public interface AuthRefreshTokenMapper {
     int updateByPrimaryKey(AuthRefreshToken record);
 
     AuthRefreshToken selectByTokenId(@Param("tokenId") Integer tokenId);
+
+    AuthRefreshToken selectByRefreshToken(@Param("refreshToken") String refreshToken);
 }

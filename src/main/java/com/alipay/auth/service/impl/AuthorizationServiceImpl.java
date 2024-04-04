@@ -5,6 +5,7 @@ import com.alipay.auth.common.err.BizException;
 import com.alipay.auth.dao.mapper.AuthAccessTokenMapper;
 import com.alipay.auth.dao.mapper.AuthClientDetailsMapper;
 import com.alipay.auth.dao.mapper.AuthRefreshTokenMapper;
+import com.alipay.auth.dao.mapper.UserMapper;
 import com.alipay.auth.domain.AuthAccessToken;
 import com.alipay.auth.domain.AuthClientDetails;
 import com.alipay.auth.domain.AuthRefreshToken;
@@ -16,14 +17,17 @@ import com.alipay.auth.service.AuthorizationService;
 
 import com.alipay.auth.service.RedisService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
+import com.alipay.auth.service.req.AuthClientRefreshTokenReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientRefreshTokenResp;
 import com.alipay.auth.service.res.AuthClientTokenResp;
 import com.alipay.auth.utils.DateUtils;
 import com.alipay.auth.utils.EncryptUtils;
 import com.alipay.auth.utils.SpringContextUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +53,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Autowired
     private AuthRefreshTokenMapper authRefreshTokenMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public boolean register(AuthClientRegisterReq request) {
@@ -165,6 +172,61 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .build();
     }
 
+    @Override
+    public AuthClientRefreshTokenResp refreshToken(AuthClientRefreshTokenReq request) {
+
+        AuthRefreshToken authRefreshToken = authRefreshTokenMapper.selectByRefreshToken(request.getRefreshToken());
+        if (Objects.isNull(authRefreshToken)) {
+            throw new BizException(ErrorCodeEnum.INVALID_GRANT.getError());
+        }
+
+        Long saveExpiresAt = authRefreshToken.getExpiresIn();
+
+        //过期日期
+        LocalDateTime expiresDateTime = DateUtils.ofEpochSecond(saveExpiresAt, null);
+
+        //当前日期
+        LocalDateTime nowDateTime = DateUtils.now();
+
+        //如果refresh_token已经失效,则需要重新生成
+        if (expiresDateTime.isBefore(nowDateTime)) {
+            throw new BizException(ErrorCodeEnum.EXPIRED_TOKEN.getError());
+        }
+
+        //获取存储的Access Token
+        AuthAccessToken authAccessToken = authAccessTokenMapper.selectByPrimaryKey(authRefreshToken.getTokenId());
+        if (Objects.isNull(authAccessToken)) {
+            throw new BizException(ErrorCodeEnum.UNKNOWN_ERROR.getError());
+        }
+
+        //获取对应的客户端信息
+        AuthClientDetails saveClientDetails = authClientDetailsMapper.selectByPrimaryKey(authAccessToken.getClientId());
+        if (Objects.isNull(saveClientDetails)) {
+            throw new BizException(ErrorCodeEnum.UNKNOWN_ERROR.getError());
+        }
+
+        //获取对应的用户信息
+        User user = userMapper.selectByPrimaryKey(authAccessToken.getUserId());
+        if (Objects.isNull(user)) {
+            throw new BizException(ErrorCodeEnum.UNKNOWN_ERROR.getError());
+        }
+
+        //新的过期时间
+        Long expiresIn = DateUtils.dayToSecond(ExpireEnum.ACCESS_TOKEN.getTime());
+
+        //新的access_token
+        String newAccessTokenStr = createAccessToken(user, saveClientDetails, authAccessToken.getGrantType(),
+                authAccessToken.getScope(), expiresIn);
+
+        //返回结果
+        return AuthClientRefreshTokenResp.builder()
+                .accessToken(newAccessTokenStr)
+                .refreshToken(request.getRefreshToken())
+                .expiresIn(expiresIn)
+                .scope(authAccessToken.getScope())
+                .build();
+    }
+
     private String createAuthorizationCode(String clientId, String scope, User user) {
         //1. 拼装加密字符串(clientId+scope+当前精确到毫秒的时间戳)
         String str = clientId + scope + DateUtils.currentTimeMillis();
@@ -211,7 +273,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     .accessToken(accessToken)
                     .userId(user.getId())
                     .userName(user.getUsername())
-                    .clientId(savedAuthClientDetails.getClientId())
+                    //AuthClientDetails的外键id
+                    .clientId(savedAuthClientDetails.getId())
                     .expiresIn(expiresAt)
                     .scope(scope)
                     .grantType(grantType)
