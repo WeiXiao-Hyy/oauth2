@@ -48,7 +48,7 @@
 <!--        </table>-->
 
         <!--生成对应表及类名-->
-        <table tableName="user" domainObjectName="User">
+        <table tableName="auth_refresh_token" domainObjectName="AuthRefreshToken">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

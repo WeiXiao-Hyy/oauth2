@@ -95,4 +95,12 @@ public interface AuthClientDetailsMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(AuthClientDetails record);
+
+    /**
+     * 根据clientId查询AuthClientDetails
+     *
+     * @param clientId string
+     * @return {@link AuthClientDetails}
+     */
+    AuthClientDetails selectByClientId(@Param("clientId") String clientId);
 }

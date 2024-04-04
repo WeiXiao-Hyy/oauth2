@@ -363,4 +363,10 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByClientId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from auth_client_details
+    where client_id = #{clientId,jdbcType=VARCHAR}
+  </select>
 </mapper>

@@ -4,6 +4,7 @@ package com.alipay.auth.service;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientTokenResp;
 
 /**
  * @author hyy
@@ -34,5 +35,5 @@ public interface AuthorizationService {
      * @param request {@link AuthClientTokenReq}
      * @return token
      */
-    String token(AuthClientTokenReq request);
+    AuthClientTokenResp token(AuthClientTokenReq request);
 }

@@ -2,8 +2,12 @@ package com.alipay.auth.service.impl;
 
 import com.alipay.auth.common.Constants;
 import com.alipay.auth.common.err.BizException;
+import com.alipay.auth.dao.mapper.AuthAccessTokenMapper;
 import com.alipay.auth.dao.mapper.AuthClientDetailsMapper;
+import com.alipay.auth.dao.mapper.AuthRefreshTokenMapper;
+import com.alipay.auth.domain.AuthAccessToken;
 import com.alipay.auth.domain.AuthClientDetails;
+import com.alipay.auth.domain.AuthRefreshToken;
 import com.alipay.auth.domain.User;
 import com.alipay.auth.enums.ErrorCodeEnum;
 import com.alipay.auth.enums.ExpireEnum;
@@ -14,6 +18,7 @@ import com.alipay.auth.service.RedisService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
 import com.alipay.auth.service.req.AuthClientRegisterReq;
 import com.alipay.auth.service.req.AuthClientTokenReq;
+import com.alipay.auth.service.res.AuthClientTokenResp;
 import com.alipay.auth.utils.DateUtils;
 import com.alipay.auth.utils.EncryptUtils;
 import com.alipay.auth.utils.SpringContextUtils;
@@ -38,6 +43,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Autowired
     private AuthClientDetailsMapper authClientDetailsMapper;
+
+    @Autowired
+    private AuthAccessTokenMapper authAccessTokenMapper;
+
+    @Autowired
+    private AuthRefreshTokenMapper authRefreshTokenMapper;
 
     @Override
     public boolean register(AuthClientRegisterReq request) {
@@ -101,13 +112,23 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public String token(AuthClientTokenReq request) {
+    public AuthClientTokenResp token(AuthClientTokenReq request) {
         //校验授权方式
         if (!GrantTypeEnum.AUTHORIZATION_CODE.getType().equals(request.getGrantType())) {
             throw new BizException(ErrorCodeEnum.INVALID_GRANT.getError());
         }
 
-        //TODO:校验请求的客户端密钥和注册的密钥是否匹配
+        AuthClientDetails savedAuthClientDetails = authClientDetailsMapper.selectByClientId(request.getClientId());
+
+        //校验client_secret
+        if (Objects.isNull(savedAuthClientDetails) || !savedAuthClientDetails.getClientSecret().equals(request.getClientSecret())) {
+            throw new BizException(ErrorCodeEnum.INVALID_CLIENT.getError());
+        }
+
+        //校验回调URL
+        if (!savedAuthClientDetails.getRedirectUri().equals(request.getRedirectUri())) {
+            throw new BizException(ErrorCodeEnum.REDIRECT_URI_MISMATCH.getError());
+        }
 
         String code = request.getCode();
 
@@ -117,15 +138,29 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         User user = redisService.get(code + ":user");
 
         //如果能够通过Authorization Code获取到对应的用户消息，则说明code有效
-        if (StringUtils.isNoneBlank(scope) && Objects.nonNull(user)) {
-            //过期时间
-            Long expiresIn = DateUtils.dayToSecond(ExpireEnum.ACCESS_TOKEN.getTime());
-
-            //TODO: 生成AccessToken
+        if (StringUtils.isBlank(scope) || Objects.isNull(user)) {
+            throw new BizException(ErrorCodeEnum.INVALID_GRANT.getError());
         }
 
-        //TODO: 待实现
-        return "";
+        //过期时间
+        Long expiresIn = DateUtils.dayToSecond(ExpireEnum.ACCESS_TOKEN.getTime());
+
+        //生成AccessToken
+        String accessTokenStr = createAccessToken(user, savedAuthClientDetails, request.getGrantType(), scope, expiresIn);
+
+        //查询插入到数据库的Access Token
+        AuthAccessToken accessToken = authAccessTokenMapper.selectByAccessToken(accessTokenStr);
+
+        //生成Refresh Token
+        String refreshTokenStr = createRefreshToken(user, accessToken);
+
+        //构造返回结果
+        return AuthClientTokenResp.builder()
+                .accessToken(accessTokenStr)
+                .expiresIn(expiresIn)
+                .refreshToken(refreshTokenStr)
+                .scope(scope)
+                .build();
     }
 
     private String createAuthorizationCode(String clientId, String scope, User user) {
@@ -158,8 +193,75 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         //2. SHA1加密
         String accessToken = "1." + EncryptUtils.sha1Hex(str) + "." + expiresIn + "." + expiresAt;
 
-        //3. TODO: 保存AccessToken
-        return "";
+        //3. 保存Access Token
+        AuthAccessToken savedAccessToken = authAccessTokenMapper.selectByUserIdClientIdScope(user.getId(),
+                savedAuthClientDetails.getId(), scope);
+
+        //如果存在userId+clientId+scope的记录，则更新，否则直接插入
+        if (Objects.nonNull(savedAccessToken)) {
+            savedAccessToken.setAccessToken(accessToken);
+            savedAccessToken.setExpiresIn(expiresIn);
+            savedAccessToken.setUpdateUser(user.getId());
+            savedAccessToken.setUpdateTime(current);
+            authAccessTokenMapper.updateByPrimaryKeySelective(savedAccessToken);
+        } else {
+            AuthAccessToken newToken = AuthAccessToken.builder()
+                    .accessToken(accessToken)
+                    .userId(user.getId())
+                    .userName(user.getUsername())
+                    .clientId(savedAuthClientDetails.getClientId())
+                    .expiresIn(expiresAt)
+                    .scope(scope)
+                    .grantType(grantType)
+                    .createUser(user.getId())
+                    .createTime(current)
+                    .updateUser(user.getId())
+                    .updateTime(current)
+                    .build();
+            authAccessTokenMapper.insertSelective(newToken);
+        }
+
+        return accessToken;
+    }
+
+    private String createRefreshToken(User user, AuthAccessToken accessToken) {
+
+        Date current = new Date();
+        //过期时间
+        Long expiresIn = DateUtils.dayToSecond(ExpireEnum.REFRESH_TOKEN.getTime());
+        //过期的时间戳
+        Long expiresAt = DateUtils.nextDaysSecond(ExpireEnum.REFRESH_TOKEN.getTime(), null);
+
+        //1. 拼装待加密字符串（username + accessToken + 当前精确到毫秒的时间戳）
+        String str = user.getUsername() + accessToken.getAccessToken() + DateUtils.currentTimeMillis();
+
+        //2. SHA1加密
+        String refreshTokenStr = "2." + EncryptUtils.sha1Hex(str) + "." + expiresIn + "." + expiresAt;
+
+        //3. 保存Refresh Token
+        AuthRefreshToken savedRefreshToken = authRefreshTokenMapper.selectByTokenId(accessToken.getId());
+        //如果存在tokenId匹配的记录，则更新原记录，否则向数据库中插入新记录
+        if (savedRefreshToken != null) {
+            savedRefreshToken.setRefreshToken(refreshTokenStr);
+            savedRefreshToken.setExpiresIn(expiresAt);
+            savedRefreshToken.setUpdateUser(user.getId());
+            savedRefreshToken.setUpdateTime(current);
+            authRefreshTokenMapper.updateByPrimaryKeySelective(savedRefreshToken);
+        } else {
+            AuthRefreshToken refreshToken = AuthRefreshToken.builder()
+                    .tokenId(accessToken.getId())
+                    .refreshToken(refreshTokenStr)
+                    .expiresIn(expiresAt)
+                    .createUser(user.getId())
+                    .updateUser(user.getId())
+                    .createTime(current)
+                    .updateTime(current)
+                    .build();
+            authRefreshTokenMapper.insertSelective(refreshToken);
+        }
+
+        //4. 返回Refresh Token
+        return refreshTokenStr;
     }
 
 
