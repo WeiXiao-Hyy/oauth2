@@ -14,7 +14,6 @@ import com.alipay.auth.enums.ErrorCodeEnum;
 import com.alipay.auth.enums.ExpireEnum;
 import com.alipay.auth.enums.GrantTypeEnum;
 import com.alipay.auth.service.AuthorizationService;
-
 import com.alipay.auth.service.RedisService;
 import com.alipay.auth.service.req.AuthClientAuthorizeReq;
 import com.alipay.auth.service.req.AuthClientRefreshTokenReq;

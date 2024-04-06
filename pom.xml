@@ -13,6 +13,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>auth</name>
     <description>auth</description>
+
+    <packaging>pom</packaging>
+
     <properties>
         <java.version>17</java.version>
         <!-- Apache Common -->
@@ -32,95 +35,75 @@
         <!-- Jedis -->
         <jedis.version>2.9.0</jedis.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+    <modules>
+        <module>auth-server</module>
+        <module>auth-client</module>
+        <module>auth-common</module>
+    </modules>
 
-        <!-- Redis -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec}</version>
+            </dependency>
 
-        <!-- Commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec}</version>
-        </dependency>
+            <!-- Java Servlet API -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api}</version>
+                <scope>provided</scope>
+            </dependency>
 
-        <!-- Java Servlet API -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet-api}</version>
-            <scope>provided</scope>
-        </dependency>
+            <!-- Fast Json -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
 
-        <!-- Fast Json -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
+            <!-- Mybatis Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>mybatis-spring</artifactId>
+                        <groupId>org.mybatis</groupId>
+                    </exclusion>
+                </exclusions>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
 
-        <!-- Mybatis Plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis-spring</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
+            <!-- Mybatis -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
 
-        <!-- Mybatis -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-
-        <!-- MySQL -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
+            <!-- MySQL -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -152,7 +135,7 @@
                     <overwrite>true</overwrite>
                     <!-- 自动生成的配置 -->
                     <configurationFile>
-                        src/main/resources/mybatis-generator/generatorConfig.xml
+                        auth-server/src/main/resources/mybatis-generator/generatorConfig.xml
                     </configurationFile>
                 </configuration>
             </plugin>

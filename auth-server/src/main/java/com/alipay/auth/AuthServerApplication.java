@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan(value = "com.alipay.auth.dao.mapper")
-public class AuthApplication {
+public class AuthServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AuthApplication.class, args);
+        SpringApplication.run(AuthServerApplication.class, args);
     }
 
 }

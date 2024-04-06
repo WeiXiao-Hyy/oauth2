@@ -1,10 +1,10 @@
-package com.alipay.auth;
+package com.alipay.authclient;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AuthApplicationTests {
+class AuthClientApplicationTests {
 
     @Test
     void contextLoads() {
