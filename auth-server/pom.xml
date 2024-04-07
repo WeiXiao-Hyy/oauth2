@@ -141,7 +141,7 @@
                     <overwrite>true</overwrite>
                     <!-- 自动生成的配置 -->
                     <configurationFile>
-                        auth/src/main/resources/mybatis-generator/generatorConfig.xml
+                        src/main/resources/mybatis-generator/generatorConfig.xml
                     </configurationFile>
                 </configuration>
             </plugin>

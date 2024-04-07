@@ -1,6 +1,6 @@
-package com.alipay.authclient.service;
+package com.alipay.authserver.service;
 
-import com.alipay.authclient.service.resp.LoginResp;
+import com.alipay.authserver.service.resp.LoginResp;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

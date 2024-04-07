@@ -1,4 +1,4 @@
-package com.alipay.authclient.service.req;
+package com.alipay.authserver.service.req;
 
 import lombok.Data;
 import lombok.NonNull;

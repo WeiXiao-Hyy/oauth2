@@ -1,4 +1,4 @@
-package com.alipay.authclient.domain;
+package com.alipay.authserver.domain;
 
 import lombok.Builder;
 import lombok.Data;
@@ -30,16 +30,6 @@ public class AuthorizationResp {
      * Access Token的有效期，以秒为单位（30天的有效期）
      */
     private Long expires_in;
-
-    /**
-     * 基于http调用Open API时所需要的Session Key，其有效期与Access Token一致
-     */
-    private String session_key;
-
-    /**
-     * 基于http调用Open API时计算参数签名用的签名密钥
-     */
-    private String session_secret;
 
     /**
      * 错误信息

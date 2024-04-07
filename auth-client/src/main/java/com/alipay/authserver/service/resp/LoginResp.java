@@ -1,4 +1,4 @@
-package com.alipay.authclient.service.resp;
+package com.alipay.authserver.service.resp;
 
 import lombok.Builder;
 import lombok.Data;

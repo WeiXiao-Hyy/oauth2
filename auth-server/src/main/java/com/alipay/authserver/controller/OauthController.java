@@ -9,6 +9,7 @@ import com.alipay.authserver.service.req.AuthClientTokenReq;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,13 +34,19 @@ public class OauthController {
         return authorizationService.register(req);
     }
 
+    @PostMapping(value = "/agree", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseResult
+    public String agree(HttpServletRequest req) {
+        return authorizationService.agree(req);
+    }
+
     @RequestMapping("/authorize")
     @ResponseResult
     public String authorize(@RequestBody AuthClientAuthorizeReq request) {
         return authorizationService.authorize(request);
     }
 
-    @RequestMapping(value = "/token", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/token", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseResult
     public AuthClientTokenResp token(@RequestBody AuthClientTokenReq req) {
         return authorizationService.token(req);

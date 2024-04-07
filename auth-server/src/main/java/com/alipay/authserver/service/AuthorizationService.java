@@ -8,6 +8,7 @@ import com.alipay.authserver.service.req.AuthClientRegisterReq;
 import com.alipay.authserver.service.req.AuthClientTokenReq;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author hyy
@@ -23,6 +24,14 @@ public interface AuthorizationService {
      * @return boolean
      */
     boolean register(AuthClientRegisterReq request);
+
+    /**
+     * 同意授权
+     *
+     * @param req {@link HttpServletRequest}
+     * @return String
+     */
+    String agree(HttpServletRequest req);
 
     /**
      * 根据clientId和scope以及当前时间戳生成AuthorizationCode(有效期为10分钟)

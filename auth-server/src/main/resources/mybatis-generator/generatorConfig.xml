@@ -27,7 +27,7 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!--生成Model类存放位置-->
-        <javaModelGenerator targetPackage="com.alipay.authclient.domain" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.alipay.authserver.domain" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -36,7 +36,7 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.alipay.authclient.dao.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.alipay.authserver.dao.mapper"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -48,7 +48,7 @@
 <!--        </table>-->
 
         <!--生成对应表及类名-->
-        <table tableName="auth_refresh_token" domainObjectName="AuthRefreshToken">
+        <table tableName="auth_client_user" domainObjectName="AuthClientUser">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

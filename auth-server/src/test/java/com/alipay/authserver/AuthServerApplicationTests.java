@@ -1,4 +1,4 @@
-package com.alipay.authclient;
+package com.alipay.authserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

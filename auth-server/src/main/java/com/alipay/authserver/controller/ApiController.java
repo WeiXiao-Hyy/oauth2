@@ -1,16 +1,16 @@
 package com.alipay.authserver.controller;
 
 import com.alipay.authcommon.anno.ResponseResult;
+import com.alipay.authcommon.enums.ErrorCodeEnum;
 import com.alipay.authcommon.err.BizException;
 import com.alipay.authcommon.utils.JsonUtils;
 import com.alipay.authserver.domain.AuthAccessToken;
 import com.alipay.authserver.domain.User;
-import com.alipay.authserver.enums.ErrorCodeEnum;
 import com.alipay.authserver.service.AuthorizationService;
 import com.alipay.authserver.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

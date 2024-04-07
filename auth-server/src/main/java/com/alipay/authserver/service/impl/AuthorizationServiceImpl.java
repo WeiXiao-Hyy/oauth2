@@ -1,21 +1,23 @@
 package com.alipay.authserver.service.impl;
 
 import com.alipay.authcommon.constants.Constants;
+import com.alipay.authcommon.enums.ErrorCodeEnum;
+import com.alipay.authcommon.enums.ExpireEnum;
+import com.alipay.authcommon.enums.GrantTypeEnum;
 import com.alipay.authcommon.err.BizException;
 import com.alipay.authcommon.utils.DateUtils;
 import com.alipay.authcommon.utils.EncryptUtils;
 import com.alipay.authcommon.utils.SpringContextUtils;
 import com.alipay.authserver.dao.mapper.AuthAccessTokenMapper;
 import com.alipay.authserver.dao.mapper.AuthClientDetailsMapper;
+import com.alipay.authserver.dao.mapper.AuthClientUserMapper;
 import com.alipay.authserver.dao.mapper.AuthRefreshTokenMapper;
 import com.alipay.authserver.dao.mapper.UserMapper;
 import com.alipay.authserver.domain.AuthAccessToken;
 import com.alipay.authserver.domain.AuthClientDetails;
+import com.alipay.authserver.domain.AuthClientUser;
 import com.alipay.authserver.domain.AuthRefreshToken;
 import com.alipay.authserver.domain.User;
-import com.alipay.authserver.enums.ErrorCodeEnum;
-import com.alipay.authserver.enums.ExpireEnum;
-import com.alipay.authserver.enums.GrantTypeEnum;
 import com.alipay.authserver.service.AuthorizationService;
 import com.alipay.authserver.service.RedisService;
 import com.alipay.authserver.service.req.AuthClientAuthorizeReq;
@@ -25,6 +27,7 @@ import com.alipay.authserver.service.req.AuthClientTokenReq;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -52,6 +55,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Autowired
     private AuthRefreshTokenMapper authRefreshTokenMapper;
+
+    @Autowired
+    private AuthClientUserMapper authClientUserMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -93,6 +99,29 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         int res = authClientDetailsMapper.insertSelective(authClientDetails);
 
         return res > 0;
+    }
+
+    @Override
+    public String agree(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+
+        //客户端ID
+        String clientIdStr = req.getParameter("client_id");
+        //权限范围
+        String scopeStr = req.getParameter("scope");
+
+        if (StringUtils.isNoneBlank(clientIdStr) && StringUtils.isNoneBlank(scopeStr)) {
+            User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+            //1. 保存授权信息
+            Integer res = authClientUserMapper.insert(AuthClientUser.builder()
+                    .authClientId(Integer.valueOf(clientIdStr))
+                    .userId(user.getId())
+                    .authScopeId(Integer.valueOf(scopeStr))
+                    .build());
+        }
+
+        return "agree";
     }
 
     @Override

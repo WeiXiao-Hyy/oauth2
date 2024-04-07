@@ -1,4 +1,4 @@
-package com.alipay.authserver.enums;
+package com.alipay.authcommon.enums;
 
 /**
  * 错误码相关枚举类

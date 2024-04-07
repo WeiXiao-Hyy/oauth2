@@ -27,7 +27,6 @@ public class UserController {
                 .username("hyy")
                 .email("hjlbupt@163.com")
                 .build();
-
         HttpSession session = request.getSession();
         session.setAttribute(Constants.SESSION_USER, user);
     }

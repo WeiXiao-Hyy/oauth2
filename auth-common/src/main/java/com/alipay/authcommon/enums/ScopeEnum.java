@@ -1,4 +1,4 @@
-package com.alipay.authserver.enums;
+package com.alipay.authcommon.enums;
 
 /**
  * 权限范围

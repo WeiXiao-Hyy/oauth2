@@ -1,11 +1,9 @@
-package com.alipay.authclient.controller;
+package com.alipay.authserver.controller;
 
-import com.alipay.authclient.service.LoginService;
-import com.alipay.authclient.service.req.LoginReq;
-import com.alipay.authclient.service.resp.LoginResp;
+import com.alipay.authserver.service.LoginService;
+import com.alipay.authserver.service.resp.LoginResp;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

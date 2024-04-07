@@ -1,10 +1,10 @@
 package com.alipay.authserver.interceptor;
 
+import com.alipay.authcommon.enums.ErrorCodeEnum;
 import com.alipay.authcommon.err.BizException;
 import com.alipay.authcommon.utils.DateUtils;
 import com.alipay.authserver.dao.mapper.AuthAccessTokenMapper;
 import com.alipay.authserver.domain.AuthAccessToken;
-import com.alipay.authserver.enums.ErrorCodeEnum;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

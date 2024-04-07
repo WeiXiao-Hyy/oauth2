@@ -1,8 +1,8 @@
 package com.alipay.authserver.service.impl;
 
+import com.alipay.authcommon.enums.ScopeEnum;
 import com.alipay.authserver.dao.mapper.UserMapper;
 import com.alipay.authserver.domain.User;
-import com.alipay.authserver.enums.ScopeEnum;
 import com.alipay.authserver.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
