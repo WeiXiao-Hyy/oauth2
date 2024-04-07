@@ -253,4 +253,11 @@
       auth_scope_id = #{authScopeId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByClientId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from auth_client_user
+    where auth_client_id = #{clientId,jdbcType=INTEGER}
+    AND user_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

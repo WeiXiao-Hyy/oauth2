@@ -20,14 +20,15 @@ import com.alipay.authserver.domain.AuthRefreshToken;
 import com.alipay.authserver.domain.User;
 import com.alipay.authserver.service.AuthorizationService;
 import com.alipay.authserver.service.RedisService;
+import com.alipay.authserver.service.req.AuthClientAgreeReq;
 import com.alipay.authserver.service.req.AuthClientAuthorizeReq;
 import com.alipay.authserver.service.req.AuthClientRefreshTokenReq;
 import com.alipay.authserver.service.req.AuthClientRegisterReq;
 import com.alipay.authserver.service.req.AuthClientTokenReq;
+import com.alipay.authserver.service.res.AuthClientAgreeResp;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -102,26 +103,21 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public String agree(HttpServletRequest req) {
-        HttpSession session = req.getSession();
+    public AuthClientAgreeResp agree(AuthClientAgreeReq req) {
+        User user = (User) SpringContextUtils.getSession().getAttribute(Constants.SESSION_USER);
 
-        //客户端ID
-        String clientIdStr = req.getParameter("client_id");
-        //权限范围
-        String scopeStr = req.getParameter("scope");
+        AuthClientUser authClientUser = AuthClientUser.builder()
+                .authClientId(req.getClientId())
+                .userId(user.getId())
+                .authScopeId(req.getScope())
+                .build();
 
-        if (StringUtils.isNoneBlank(clientIdStr) && StringUtils.isNoneBlank(scopeStr)) {
-            User user = (User) session.getAttribute(Constants.SESSION_USER);
+        // 保存授权信息
+        int cnt = authClientUserMapper.insert(authClientUser);
 
-            //1. 保存授权信息
-            Integer res = authClientUserMapper.insert(AuthClientUser.builder()
-                    .authClientId(Integer.valueOf(clientIdStr))
-                    .userId(user.getId())
-                    .authScopeId(Integer.valueOf(scopeStr))
-                    .build());
-        }
-
-        return "agree";
+        return AuthClientAgreeResp.builder()
+                .success(cnt > 0)
+                .build();
     }
 
     @Override

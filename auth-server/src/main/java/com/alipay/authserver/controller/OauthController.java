@@ -2,10 +2,12 @@ package com.alipay.authserver.controller;
 
 import com.alipay.authcommon.anno.ResponseResult;
 import com.alipay.authserver.service.AuthorizationService;
+import com.alipay.authserver.service.req.AuthClientAgreeReq;
 import com.alipay.authserver.service.req.AuthClientAuthorizeReq;
 import com.alipay.authserver.service.req.AuthClientRefreshTokenReq;
 import com.alipay.authserver.service.req.AuthClientRegisterReq;
 import com.alipay.authserver.service.req.AuthClientTokenReq;
+import com.alipay.authserver.service.res.AuthClientAgreeResp;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
 import jakarta.annotation.Resource;
@@ -36,7 +38,7 @@ public class OauthController {
 
     @PostMapping(value = "/agree", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseResult
-    public String agree(HttpServletRequest req) {
+    public AuthClientAgreeResp agree(AuthClientAgreeReq req) {
         return authorizationService.agree(req);
     }
 

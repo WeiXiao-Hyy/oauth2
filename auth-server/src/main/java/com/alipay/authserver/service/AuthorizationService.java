@@ -2,10 +2,12 @@ package com.alipay.authserver.service;
 
 
 import com.alipay.authserver.domain.AuthAccessToken;
+import com.alipay.authserver.service.req.AuthClientAgreeReq;
 import com.alipay.authserver.service.req.AuthClientAuthorizeReq;
 import com.alipay.authserver.service.req.AuthClientRefreshTokenReq;
 import com.alipay.authserver.service.req.AuthClientRegisterReq;
 import com.alipay.authserver.service.req.AuthClientTokenReq;
+import com.alipay.authserver.service.res.AuthClientAgreeResp;
 import com.alipay.authserver.service.res.AuthClientRefreshTokenResp;
 import com.alipay.authserver.service.res.AuthClientTokenResp;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +30,10 @@ public interface AuthorizationService {
     /**
      * 同意授权
      *
-     * @param req {@link HttpServletRequest}
-     * @return String
+     * @param req {@link AuthClientAgreeReq}
+     * @return AuthClientAgreeResp
      */
-    String agree(HttpServletRequest req);
+    AuthClientAgreeResp agree(AuthClientAgreeReq req);
 
     /**
      * 根据clientId和scope以及当前时间戳生成AuthorizationCode(有效期为10分钟)

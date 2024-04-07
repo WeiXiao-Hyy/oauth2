@@ -95,4 +95,6 @@ public interface AuthClientUserMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(AuthClientUser record);
+
+    AuthClientUser selectByClientId(@Param("clientId") Integer clientId, @Param("userId") Integer userId);
 }

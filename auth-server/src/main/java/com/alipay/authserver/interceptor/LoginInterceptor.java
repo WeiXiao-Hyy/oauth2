@@ -23,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         //获取session中存储的token
         User user = (User) request.getSession().getAttribute(Constants.SESSION_USER);
 
-        //TODO: 如果不存在user则需要跳转到登陆页面
+        //如果不存在user则需要跳转到登陆页面
         if (Objects.isNull(user)) {
             log.error("Session not exist user");
             return false;

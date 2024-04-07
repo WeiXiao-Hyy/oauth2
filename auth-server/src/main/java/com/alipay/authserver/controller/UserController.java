@@ -35,15 +35,4 @@ public class UserController {
 
         return JsonUtils.toJson(user);
     }
-
-    @RequestMapping("/sget")
-    @ResponseResult
-    public String sessionGet(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute(Constants.SESSION_USER);
-        if (Objects.isNull(user)) {
-            return "Session not exist user";
-        }
-
-        return JsonUtils.toJson(user);
-    }
 }
