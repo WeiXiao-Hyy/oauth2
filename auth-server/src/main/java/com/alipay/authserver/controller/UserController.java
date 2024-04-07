@@ -30,8 +30,7 @@ public class UserController {
                 .username("hyy")
                 .email("hjlbupt@163.com")
                 .build();
-        HttpSession session = request.getSession();
-        session.setAttribute(Constants.SESSION_USER, user);
+        request.getSession().setAttribute(Constants.SESSION_USER, user);
         log.info("Put user={} in the session", user);
 
         return JsonUtils.toJson(user);
@@ -41,10 +40,10 @@ public class UserController {
     @ResponseResult
     public String sessionGet(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute(Constants.SESSION_USER);
-
         if (Objects.isNull(user)) {
             return "Session not exist user";
         }
+
         return JsonUtils.toJson(user);
     }
 }

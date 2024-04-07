@@ -1,13 +1,9 @@
 package com.alipay.authserver.interceptor;
 
 import com.alipay.authcommon.constants.Constants;
-import com.alipay.authcommon.enums.ErrorCodeEnum;
-import com.alipay.authcommon.utils.JsonUtils;
 import com.alipay.authserver.domain.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;

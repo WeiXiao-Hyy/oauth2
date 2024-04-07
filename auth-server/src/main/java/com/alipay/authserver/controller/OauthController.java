@@ -1,7 +1,6 @@
 package com.alipay.authserver.controller;
 
 import com.alipay.authcommon.anno.ResponseResult;
-import com.alipay.authcommon.constants.Constants;
 import com.alipay.authserver.service.AuthorizationService;
 import com.alipay.authserver.service.req.AuthClientAuthorizeReq;
 import com.alipay.authserver.service.req.AuthClientRefreshTokenReq;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * @author hyy

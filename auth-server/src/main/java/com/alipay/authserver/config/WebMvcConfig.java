@@ -17,13 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor()).addPathPatterns("/user/**", "/oauth2.0/authorizePage", "/oauth2.0/authorize", "/sso/token");
-        registry.addInterceptor(oauthInterceptor()).addPathPatterns("/oauth2.0/authorize");
-        registry.addInterceptor(accessTokenInterceptor()).addPathPatterns("/api/**");
-    }
-
     @Bean
     public OauthInterceptor oauthInterceptor() {
         return new OauthInterceptor();
@@ -38,4 +31,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public LoginInterceptor loginInterceptor() {
         return new LoginInterceptor();
     }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor()).addPathPatterns("/user/**", "/oauth2.0/authorizePage", "/oauth2.0/authorize", "/sso/token");
+        registry.addInterceptor(oauthInterceptor()).addPathPatterns("/oauth2.0/authorize");
+        registry.addInterceptor(accessTokenInterceptor()).addPathPatterns("/api/**");
+    }
+
+
 }

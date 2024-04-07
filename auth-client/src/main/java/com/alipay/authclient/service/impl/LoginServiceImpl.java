@@ -82,6 +82,10 @@ public class LoginServiceImpl implements LoginService {
             //http://127.0.0.1:7001/oauth2.0/authorize?client_id={0}&response_type=code&scope=super&&status={1}&redirect_uri={2}
             resUri = MessageFormat.format(authorizationUri, clientId, status, currentUrl);
 
+            //Test: 测试Session user
+            User user = (User) request.getSession().getAttribute(Constants.SESSION_USER);
+            log.info("Get user={} from session", user);
+
             return LoginResp.builder()
                     .redirectUri(resUri)
                     .build();
