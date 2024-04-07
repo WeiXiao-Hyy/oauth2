@@ -32,8 +32,6 @@
         <mybatis.version>3.0.3</mybatis.version>
         <!-- MySQL -->
         <mysql.version>5.1.47</mysql.version>
-        <!-- Jedis -->
-        <jedis.version>2.9.0</jedis.version>
         <!-- okHttp -->
         <okhttp.version>4.9.0</okhttp.version>
     </properties>

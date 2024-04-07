@@ -1,4 +1,4 @@
-package com.alipay.authserver.domain;
+package com.alipay.authclient.domain;
 
 import java.util.Date;
 import lombok.Data;

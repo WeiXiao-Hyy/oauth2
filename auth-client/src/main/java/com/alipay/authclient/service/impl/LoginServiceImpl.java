@@ -1,11 +1,11 @@
-package com.alipay.authserver.service.impl;
+package com.alipay.authclient.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alipay.authserver.domain.AuthorizationResp;
-import com.alipay.authserver.domain.User;
-import com.alipay.authserver.service.LoginService;
-import com.alipay.authserver.service.req.RequestTokenDTO;
-import com.alipay.authserver.service.resp.LoginResp;
+import com.alipay.authclient.domain.AuthorizationResp;
+import com.alipay.authclient.domain.User;
+import com.alipay.authclient.service.LoginService;
+import com.alipay.authclient.service.req.RequestTokenDTO;
+import com.alipay.authclient.service.resp.LoginResp;
 import com.alipay.authcommon.constants.Constants;
 import com.alipay.authcommon.enums.ErrorCodeEnum;
 import com.alipay.authcommon.enums.GrantTypeEnum;
