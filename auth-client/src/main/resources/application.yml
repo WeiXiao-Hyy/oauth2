@@ -1,9 +1,7 @@
 server:
   port: 8015
 
-
 # values
-
 own:
   oauth2:
     client-id: 7Ugj6XWmTDpyYp8M8njG3hqx

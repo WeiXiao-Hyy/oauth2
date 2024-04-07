@@ -29,26 +29,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         //TODO: 如果不存在user则需要跳转到登陆页面
         if (Objects.isNull(user)) {
-            log.error("session do not exist user");
-            return generateErrorResp(response, ErrorCodeEnum.INVALID_GRANT);
+            log.error("Session not exist user");
+            return false;
         }
 
-        log.info("get session user={}", user);
-
+        log.info("Get session user={}", user);
         return true;
-    }
-
-    private boolean generateErrorResp(HttpServletResponse response, ErrorCodeEnum errorCodeEnum) throws Exception {
-
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-type", "application/json;charset=UTF-8");
-
-        Map<String, String> result = new HashMap<>(2);
-        result.put("error", errorCodeEnum.getError());
-        result.put("error_description", errorCodeEnum.getErrorDescription());
-
-        response.getWriter().write(JsonUtils.toJson(result));
-
-        return false;
     }
 }

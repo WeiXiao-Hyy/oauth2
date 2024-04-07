@@ -32,6 +32,8 @@
         <mybatis.version>3.0.3</mybatis.version>
         <!-- MySQL -->
         <mysql.version>5.1.47</mysql.version>
+        <!-- Redis -->
+        <redis.version>3.2.4</redis.version>
         <!-- okHttp -->
         <okhttp.version>4.9.0</okhttp.version>
     </properties>
@@ -44,6 +46,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Redis -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+
             <!-- Commons -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
