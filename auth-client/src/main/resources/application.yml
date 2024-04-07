@@ -1,0 +1,15 @@
+server:
+  port: 8015
+
+
+# values
+
+own:
+  oauth2:
+    client-id: 7Ugj6XWmTDpyYp8M8njG3hqx
+    scope: super
+    client-secret: tur2rlFfywR9OOP3fB5ZbsLTnNuNabI3
+    user-authorization-uri: http://127.0.0.1:7001/oauth2.0/authorize?client_id={0}&response_type=code&scope=super&&status={1}&redirect_uri={2}
+    access-token-uri: http://127.0.0.1:7001/oauth2.0/token?client_id={1}&client_secret={2}&grant_type=authorization_code&code={3}&redirect_uri={4}
+    resource:
+      userInfoUri: http://127.0.0.1:7001/api/users/getInfo?access_token={1}

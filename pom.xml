@@ -34,6 +34,8 @@
         <mysql.version>5.1.47</mysql.version>
         <!-- Jedis -->
         <jedis.version>2.9.0</jedis.version>
+        <!-- okHttp -->
+        <okhttp.version>4.9.0</okhttp.version>
     </properties>
 
     <modules>
@@ -102,6 +104,14 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
+
+            <!--okhttp-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
