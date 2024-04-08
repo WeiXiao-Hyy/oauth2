@@ -54,7 +54,7 @@ GitHub生成的client_id, client_secret(密钥), redirect_uri, homepage_url, app
 
 ### clientId如何生成唯一的
 
-TODO: Id Generator实现，读完《设计模式之美》更新
+在注册clientId以及申请clientSecret时，如何保证生成的clientId是不重复的呢？
 
 ### 和JWT以及Cookie-Session对比
 
@@ -70,21 +70,67 @@ TODO: Id Generator实现，读完《设计模式之美》更新
 
 > 案例
 
-![](./docs/imgs/CSRF攻击原理.png)
+![CSRF攻击原理](./docs/imgs/CSRF攻击原理.png)
 
 1. 用户B登录`掘金`网站，并且选择绑定自己的`GitHub`账号;
 2. `掘金`网站将用户B重定向到`GitHub`，由于他之前已经登录过`GitHub`，所以`GitHub`直接向他显示是否授权掘金访问的页面;
 3. 用户B在点击"同意授权"之后，截获`GitHub`服务器返回的含有`authorization code`参数的HTTP响应;
-4. 用户B精心构造一个Web页面，它会触发`掘金`网站向`GitHub`发起令牌申请的请求，而这个请求中的`authorization code`参数正是上一步截获到的`code`;
+4. 用户B精心构造一个Web页面，它会触发`掘金`网站向`GitHub`发起令牌申请的请求，而这个请求中的`authorization code`
+   参数正是上一步截获到的`code`;
 5. 用户B将这个Web页面放到互联网上，等待或者诱骗受害者用户A来访问;
-6. 用户A之前登录了`掘金`网站，只是没有把自己的账号和其他社交账号绑定起来。在用户A访问了用户B准备的这个Web页面，令牌申请流程在用户A的浏览器里被顺利触发，`掘金`网站从`GitHub`那里获取到`access_token`，但是这个`token`以及通过它进一步获取到的用户信息却都是攻击者用户B;
-7. `掘金`网站将用户B的`GitHub`账号同用户A的`掘金`账号关联绑定起来，从此以后，用户B就可以用自己的`GitHub`账号通过`OAuth`登录到用户A在`掘金`网站中的账号，堂而皇之的冒充用户A的身份执行各种操作;
+6. 用户A之前登录了`掘金`
+   网站，只是没有把自己的账号和其他社交账号绑定起来。在用户A访问了用户B准备的这个Web页面，令牌申请流程在用户A的浏览器里被顺利触发，`掘金`
+   网站从`GitHub`那里获取到`access_token`，但是这个`token`以及通过它进一步获取到的用户信息却都是攻击者用户B;
+7. `掘金`网站将用户B的`GitHub`账号同用户A的`掘金`账号关联绑定起来，从此以后，用户B就可以用自己的`GitHub`账号通过`OAuth`
+   登录到用户A在`掘金`网站中的账号，堂而皇之的冒充用户A的身份执行各种操作;
 
-## 代码实现
+## 代码实现(知识碎片总结)
 
-- auth-client: 客户端实现 
-- auth-server: 服务端实现
-- auth-common: 共同依赖
+本部分将开发过程中遇到的难点记录下来，具体源码参考此repo :+1:
+
+### postman 请求共享session问题
+
+本文为单体应用，使用了`HttpServletRequest`和`HttpSession`方便开发，将相关的数据保存在服务器的Session中，但是Postman在发送请求的时候，
+不会将其视为同一个连接，导致获取不到Session中的数据，需要每次将用户登陆的Cookie赋值到相应的接口上才能获取到Session中的数据。
+
+![postman请求(相同session)](./docs/imgs/postman请求(相同session).png)
+
+### 实现HandlerInterceptor接口完成请求过滤
+
+涉及到接口请求过滤条件时，可以通过实现`WebMvcConfigurer`接口来添加过滤规则，例如：
+
+1. 授权前用户没有登陆则需要重定向到登陆页面
+2. 如果access_token过期，则需要重新获取
+3. ......
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    //注意注入bean的写法
+    @Bean
+    public OauthInterceptor oauthInterceptor() {
+        return new OauthInterceptor();
+    }
+
+    @Bean
+    public AuthAccessTokenInterceptor accessTokenInterceptor() {
+        return new AuthAccessTokenInterceptor();
+    }
+
+    @Bean
+    public LoginInterceptor loginInterceptor() {
+        return new LoginInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor()).addPathPatterns("/user/**", "/oauth2.0/authorizePage", "/oauth2.0/authorize", "/sso/token");
+        registry.addInterceptor(oauthInterceptor()).addPathPatterns("/oauth2.0/authorize");
+        registry.addInterceptor(accessTokenInterceptor()).addPathPatterns("/api/**");
+    }
+}
+```
 
 ## 参考资料
 
